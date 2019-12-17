@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% block title %}{% endblock %}</title>
+  <title>{% block title %}{% endblock %} CS-D IM</title>
   <script src="https://kit.fontawesome.com/8f3c004287.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
@@ -22,9 +22,10 @@
 </head>
 <body>
     <nav class='navbar navbar-expand-lg navbar-light bg-light sticky-top justify-content-between'>
-        <a class='navbar-brand mb-0 h1' href='{{url_for("index")}}' style="font-size:1.55rem; padding-left:2rem">CS C</a>
+        <a class='navbar-brand mb-0 h1' href='{{url_for("index")}}' style="font-size:1.55rem; padding-left:2rem">CS-D Item Manager</a>
         <ul class="navbar-nav">
             {% if g.user %}
+                <li class="nav-item h5"><a href="{{url_for('view.form_client')}}" class="nav-link">Client</a></li>
                 {% for name in names if name!='sqlite_sequence' %}
                 {% if not g.user.admin and name=='users' %} {% continue %} {% endif %}
                 {% if name==tname %}
@@ -48,15 +49,18 @@
           </header>
             <!-- flash messages -->
             {% for error_message in get_flashed_messages(category_filter=["error"]) %}
-              <div class="alert alert-danger alert-dismissible">{{ error_message }}</div>
+              <div class="alert alert-danger alert-dismissible text-center"> <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                  {{ error_message }}</div>
             {% endfor %}
 
             {% for success_message in get_flashed_messages(category_filter=["success"]) %}
-              <div class="alert alert-success alert-dismissible">{{ success_message }}</div>
+              <div class="alert alert-success alert-dismissible text-center"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                  {{ success_message }}</div>
             {% endfor %}
 
             {% for info_message in get_flashed_messages(category_filter=["info"]) %}
-              <div class="alert alert-info alert-dismissible">{{ info_message }}</div>
+              <div class="alert alert-info alert-dismissible text-center"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                  {{ info_message }}</div>
             {% endfor %}
 
 
