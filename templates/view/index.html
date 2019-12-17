@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+<br/>
+{% block header %}
+    <span style="display:none">{% block title %} Index | {% endblock %}</span>
+  <h1 class='text-center'>Home</h1>
+{% endblock %}
+
+{% block content %}
+
+<div style="margin-left:50px">
+    <h2>List of tables:</h2>
+    <ol style="font-size:18px">
+        {% for name in names if name!='sqlite_sequence'%}
+        {% if not g.user.admin and name=='users' %} {% continue %} {% endif %}
+        <li><a href="{{url_for('view.viewer', tname=name)}}">{{name}}</a></li>
+        {% endfor %}
+    </ol>
+</div>
+
+<div class="col-md-4 text-center">
+    <a href="{{url_for('view.form_client')}}"><button type="button" class="btn btn-light btn-lg">Client</button></a>
+</div>
+
+
+{% endblock %}

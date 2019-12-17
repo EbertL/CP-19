@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+<br/>
+{% block header %}
+    <span style="display:none">{% block title %} View {{tname}} | {% endblock %}</span>
+    <h1 class='text-center' style="margin-left:100px">{{ tname }}</h1>
+{% endblock %}
+
+{% block content %}
+
+    <div class="table-responsive">
+        <table class="table table-hover" style="width:98%">
+            <thead>
+                    <tr>
+                        {% for col_name in col_names %}
+                        <th>{{col_name}}</th>
+                        {% endfor %}
+                        {% if g.user.admin %}
+                        <th>EDIT</th>
+                        {% endif %}
+                    </tr>
+            </thead>
+            {% for result in results %}
+                <tr>
+                    {% for col_name in col_names %}
+                    <td>{{result[col_name]}}</td>
+                    {% endfor %}
+                    {% if g.user.admin %}
+                    <td align="center"><a href="{{url_for('view.editor', tname=tname, id=result['id'])}}"><i class="fas fa-edit"></i></a></td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+<div class="text-center">
+    <br/><br/><br/>
+    <h3><a href="{{url_for('view.inserter', tname=tname)}}"><i class="fas fa-plus-circle"></i> Insert new data</a></h3>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $('.table').DataTable();
+} );
+</script>
+
+{% endblock %}

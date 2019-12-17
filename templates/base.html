@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{% endblock %}</title>
+  <script src="https://kit.fontawesome.com/8f3c004287.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
+<style>
+    .navbar-nav > li:nth-last-child(n+4) {
+        border-right: 1px solid rgba(0,0,0,.5);
+        box-sizing: border-box;
+        padding: 0 5px;
+    }
+</style>
+</head>
+<body>
+    <nav class='navbar navbar-expand-lg navbar-light bg-light sticky-top justify-content-between'>
+        <a class='navbar-brand mb-0 h1' href='{{url_for("index")}}' style="font-size:1.55rem; padding-left:2rem">CS C</a>
+        <ul class="navbar-nav">
+            {% if g.user %}
+                {% for name in names if name!='sqlite_sequence' %}
+                {% if not g.user.admin and name=='users' %} {% continue %} {% endif %}
+                {% if name==tname %}
+                <li class="nav-item h5 active"><a class="nav-link" href="{{url_for('view.viewer', tname=name)}}"> {{name}} </a></li>
+                {% else %}
+                <li class="nav-item h5"><a class="nav-link" href="{{url_for('view.viewer', tname=name)}}"> {{name}} </a></li>
+                {% endif %}
+                {% endfor %}
+            <li role="separator" class="divider" style="width:170px"></li>
+            <li class="nav-item mr-auto"><a class="nav-link" href="{{ url_for('auth.logout') }}">Log Out</a></li>
+            {% else %}
+              <li class="nav-item mr-auto"><a class="nav-link" href="{{ url_for('auth.login') }}">Log In</a></li>
+              <li class="nav-item mr-auto"><a href="{{url_for('auth.register')}}" class="nav-link">Register</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    <section class="content" style='margin:20px'>
+          <header>
+            {% block header %}{% endblock %}
+          </header>
+            <!-- flash messages -->
+            {% for error_message in get_flashed_messages(category_filter=["error"]) %}
+              <div class="alert alert-danger alert-dismissible">{{ error_message }}</div>
+            {% endfor %}
+
+            {% for success_message in get_flashed_messages(category_filter=["success"]) %}
+              <div class="alert alert-success alert-dismissible">{{ success_message }}</div>
+            {% endfor %}
+
+            {% for info_message in get_flashed_messages(category_filter=["info"]) %}
+              <div class="alert alert-info alert-dismissible">{{ info_message }}</div>
+            {% endfor %}
+
+
+         <br/>
+          {% block content %}{% endblock %}
+    </section>
+
+</body>
+</html>

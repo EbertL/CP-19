@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+<br/>
+{% block header %}
+    <span style="display:none">{% block title %} Edit | {% endblock %}</span>
+  <h1 class='text-center'>Update data</h1>
+{% endblock %}
+
+{% block content %}
+
+<div style="margin-left:50px">
+      <form method="post" style="width:40%; margin: 0 auto" >
+          {% for col_name in col_names if col_name != 'operation_time' and col_name!='id'%}
+          {% if col_name == 'password' %}
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input class="form-control" type="password" name="password" id="password" placeholder='Password'>
+              </div>
+          {% else %}
+                <div class="form-group">
+                    <label for="{{col_name}}">{{col_name}}</label>
+                    <input class="form-control" name="{{col_name}}" id="{{col_name}}" value="{{results[col_name]}}" required>
+                </div>
+          {% endif %}
+          {% endfor %}
+
+    <button class="btn btn-primary" type="submit">Update data</button>
+  </form>
+</div>
+
+
+{% endblock %}
