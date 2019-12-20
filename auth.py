@@ -88,6 +88,5 @@ def load_logged_in_user():
         g.user = None
     else:
         g.user = (
-            # get_db().execute("SELECT * FROM admins WHERE id = ?", (user_id,)).fetchone()
             models.User.query.get(user_id)
         )

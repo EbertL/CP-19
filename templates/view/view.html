@@ -33,10 +33,13 @@
         </table>
     </div>
 
-<div class="text-center">
-    <br/><br/><br/>
-    <h3><a href="{{url_for('view.inserter', tname=tname)}}"><i class="fas fa-plus-circle"></i> Insert new data</a></h3>
-</div>
+    {% if g.user.admin %}
+    <div class="text-center">
+        <br/><br/><br/>
+        <h3><a href="{{url_for('view.inserter', tname=tname)}}"><i class="fas fa-plus-circle"></i> Insert new data</a></h3>
+    </div>
+    {% endif %}
+
 
 <script type="text/javascript">
 $(document).ready(function() {

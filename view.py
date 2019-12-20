@@ -31,6 +31,8 @@ def viewer(tname):
     cur = db.session.execute(f"SELECT * FROM {tname}")
     if tname == "records":
         cur = db.session.execute(f"SELECT * FROM records_view")
+    if tname == "users" and not g.user.admin:
+        return abort(405)
     results = [{column: value for column, value in row.items()} for row in cur]
     col_names = [elem for elem in cur.keys()]
     return render_template('view/view.html', tname=tname, col_names=col_names, results=results, names=names)
@@ -39,8 +41,9 @@ def viewer(tname):
 @bp.route("/database/<tname>/insert", methods=['POST', "GET"])
 @login_required
 def inserter(tname):
+    if not g.user.admin:
+        return abort(405)
     cur = db.session.execute(f"SELECT * FROM {tname}")
-    # results = [{column: value for column, value in row.items()} for row in cur]
     col_names = [elem for elem in cur.keys()]
 
     if request.method == 'POST':
@@ -74,6 +77,8 @@ def inserter(tname):
 @bp.route("/database/<tname>/edit/<id>", methods=('GET', 'POST'))
 @login_required
 def editor(tname, id):
+    if not g.user.admin:
+        return abort(405)
     cur = db.session.execute(f"SELECT * FROM {tname}")
     col_names = [elem for elem in cur.keys()]
     result = None
