@@ -22,8 +22,8 @@ names = db.metadata.tables.keys()
 @bp.route('/')
 @login_required
 def index():
-    return render_template('view/index.html', names=names)
-
+    # return render_template('view/index.html', names=names)
+    return redirect(url_for('view.form_client'))
 
 @bp.route('/database/<tname>')
 @login_required
@@ -48,11 +48,12 @@ def inserter(tname):
 
     if request.method == 'POST':
         k = request.form.to_dict()
+
         if 'password' in k.keys() and k['password'] != '':
             k['password'] = generate_password_hash(k['password'])
-        if "valid" in k.keys() and k['valid'] in boolean.keys():
+        if "valid" in k.keys() and k['valid'].lower() in boolean.keys():
             k["valid"] = boolean[k['valid'].lower()]
-        if "admin" in k.keys() and k['admin'] in boolean.keys():
+        if "admin" in k.keys() and k['admin'].lower() in boolean.keys():
             k["admin"] = boolean[k['admin'].lower()]
 
         if "operation" in k.keys():
@@ -96,7 +97,7 @@ def editor(tname, id):
 
         if "valid" in k.keys() and k['valid'].lower() in boolean.keys():
             k["valid"] = boolean[k['valid'].lower()]
-        if "admin" in k.keys() and k['admin'] in boolean.keys():
+        if "admin" in k.keys() and k['admin'].lower() in boolean.keys():
             k["admin"] = boolean[k['admin'].lower()]
 
         try:
@@ -109,6 +110,7 @@ def editor(tname, id):
             else:
                 abort(500)
         except StatementError as e:
+            print(k)
             flash("Got wrong value. Please write for Boolean 1/0 or True/False.", "error")
 
         return redirect(url_for('view.viewer', tname=tname))
@@ -132,7 +134,7 @@ def form_client():
                 db.session.add(new_rec)
                 db.session.commit()
                 flash(f"{new.name} added!", "success")
-                return render_template('view/index.html', names=names)
+                return redirect(url_for("view.viewer", tname="items"))
             elif k['itemControl'] in [str(i[0]) for i in db.session.query(Item.id).all()]:
                 obj = Item.query.get(int(k['itemControl']))
                 obj.quantity = int(obj.quantity) + int(k['quantityField'])
@@ -140,7 +142,7 @@ def form_client():
                 db.session.add(new_rec)
                 db.session.commit()
                 flash(f"Successfully added {k['quantityField']} to {obj.name}!", "success")
-                return render_template('view/index.html', names=names)
+                return redirect(url_for("view.viewer", tname="items"))
             else:
                 error = "Problems with entered data."
         elif k["option"] == "takeOption":
@@ -151,14 +153,14 @@ def form_client():
                 db.session.add(new_rec)
                 db.session.commit()
                 flash(f"Successfully took  {k['quantityField']} from {obj.name}!", "success")
-                return render_template('view/index.html', names=names)
+                return redirect(url_for("view.viewer", tname="items"))
             else:
                 error = f"You trying to take {k['quantityField']} from {obj.name} but there is only {obj.quantity}!"
         else:
             error = "Troubles occurred."
 
         if error is None:
-            return render_template('view/index.html', names=names)
+            return redirect(url_for("view.viewer", tname="items"))
 
         flash(error, "error")
     return render_template("view/client_form.html", items=items, names=names)
