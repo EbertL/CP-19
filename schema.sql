@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS users;
-DROP TABLE IF EXISTS item_info;
-DROP TABLE IF EXISTS actual;
+DROP TABLE IF EXISTS items;
 DROP TABLE IF EXISTS records;
+DROP VIEW IF EXISTS records_view;
 
 CREATE TABLE users(
     id UNSIGNED INT PRIMARY KEY AUTOINCREMENT,
@@ -12,17 +12,13 @@ CREATE TABLE users(
     admin BOOLEAN DEFAULT 0 NOT NULL
 );
 
-CREATE TABLE item_info(
+CREATE TABLE items(
     id UNSIGNED INT PRIMARY KEY AUTOINCREMENT,
     name VARCHAR(50) NOT NULL UNIQUE,
-    description TEXT
+    description TEXT,
+    quantity UNSIGNED INT NOT NULL DEFAULT 0
 );
 
-CREATE TABLE actual(
-    id UNSIGNED INT NOT NULL UNIQUE,
-    quantity UNSIGNED INT NOT NULL DEFAULT 0,
-    FOREIGN KEY (id) REFERENCES item_info(id) ON UPDATE CASCADE ON DELETE RESTRICT
-);
 
 CREATE TABLE records(
     id UNSIGNED INT PRIMARY KEY AUTOINCREMENT,
@@ -32,3 +28,8 @@ CREATE TABLE records(
     item_id UNSIGNED INT FOREIGN KEY REFERENCES item_info(id) ON UPDATE CASCADE ON DELETE SET NULL,
     quantity UNSIGNED INT NOT NULL
 );
+
+CREATE VIEW records_view AS SELECT records.id, records.operation_time, users.name AS user_name,
+ records.operation, items.name AS item_name,
+ records.quantity FROM records INNER JOIN users ON records.user_id=users.id INNER JOIN items ON records.item_id=items.id
+ ORDER BY records.id DESC;

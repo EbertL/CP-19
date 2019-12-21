@@ -18,10 +18,7 @@ def login():
         phone = request.form['phone']
         password = request.form['password']
         error = None
-        # admin = db.execute('SELECT * FROM admins WHERE phone=?', (phone,)).fetchone()
-        print(models.User.query.first().__dict__)
         user = models.User.query.filter_by(phone=phone).first()
-        print(user)
 
         if user is None:
             error = 'Incorrect phone number.'
@@ -36,8 +33,6 @@ def login():
             return redirect(url_for('index'))
 
         flash(error, "error")
-    # db.session.add(models.User(phone="1111", name='1', password=generate_password_hash('1'), admin=1, valid=1))
-    # db.session.commit()
     return render_template('auth/login.html')
 
 

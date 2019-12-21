@@ -22,7 +22,6 @@ names = db.metadata.tables.keys()
 @bp.route('/')
 @login_required
 def index():
-    # return render_template('view/index.html', names=names)
     return redirect(url_for('view.form_client'))
 
 @bp.route('/database/<tname>')
@@ -110,7 +109,6 @@ def editor(tname, id):
             else:
                 abort(500)
         except StatementError as e:
-            print(k)
             flash("Got wrong value. Please write for Boolean 1/0 or True/False.", "error")
 
         return redirect(url_for('view.viewer', tname=tname))
